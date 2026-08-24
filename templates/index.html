@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>TNPSC Study AI Chatbot</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h2>TNPSC AI</h2>
+        </div>
+
+
+        <!-- NEW CHAT -->
+
+        <button class="new-chat-btn" id="newChatBtn">
+
+            <i class="fa-solid fa-plus"></i>
+
+            New Chat
+
+        </button>
+
+
+        <!-- MENU -->
+
+        <div class="menu">
+
+            <!-- CHAT -->
+
+            <button class="menu-item active"
+                    id="chatMenuBtn">
+
+                <i class="fa-solid fa-comments"></i>
+
+                Chat
+
+            </button>
+
+
+            <!-- STUDY MATERIALS -->
+
+            <button class="menu-item"
+                    id="studyMenuBtn">
+
+                <i class="fa-solid fa-book"></i>
+
+                Study Materials
+
+            </button>
+
+
+            <!-- PRACTICE QUESTIONS -->
+
+            <button class="menu-item"
+                    id="practiceMenuBtn">
+
+                <i class="fa-solid fa-circle-question"></i>
+
+                Practice Questions
+
+            </button>
+
+
+            <!-- HISTORY -->
+
+            <button class="menu-item"
+                    id="historyMenuBtn">
+
+                <i class="fa-solid fa-clock-rotate-left"></i>
+
+                History
+
+            </button>
+
+        </div>
+
+
+        <div class="sidebar-footer">
+
+            <p>TNPSC Exam Preparation</p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <div class="main-content">
+
+
+        <!-- ================= HEADER ================= -->
+
+        <div class="header">
+
+            <div>
+
+                <h2>TNPSC Study Assistant</h2>
+
+                <p>Your AI Learning Companion</p>
+
+            </div>
+
+
+            <!-- LANGUAGE SELECT -->
+
+            <div class="language-section">
+
+                <i class="fa-solid fa-language"></i>
+
+                <select id="languageSelect">
+
+                    <option value="auto">
+                        Auto Detect
+                    </option>
+
+                    <option value="tamil">
+                        தமிழ்
+                    </option>
+
+                    <option value="english">
+                        English
+                    </option>
+
+                    <option value="tanglish">
+                        Tanglish
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- CHAT SECTION -->
+        <!-- ================================================= -->
+
+        <div class="chat-container"
+             id="chatContainer">
+
+
+            <!-- BOT WELCOME MESSAGE -->
+
+            <div class="message bot-message">
+
+                <div class="avatar bot-avatar">
+
+                    <i class="fa-solid fa-robot"></i>
+
+                </div>
+
+
+                <div class="message-content">
+
+                    <p>
+                        👋 Vanakkam! Welcome to TNPSC Study Assistant!
+                    </p>
+
+                    <p>
+                        Neenga Tamil, English or Tanglish
+                        entha language-la venalum question kekalam.
+                    </p>
+
+                    <p>
+                        I'll try to answer in the same language
+                        you use! 📚🤖
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- QUICK QUESTIONS -->
+
+            <div class="quick-questions">
+
+                <p>Try asking:</p>
+
+
+                <button class="quick-btn">
+
+                    TNPSC Group 4 aptitude question kudu
+
+                </button>
+
+
+                <button class="quick-btn">
+
+                    இந்திய அரசியலமைப்பு பற்றி கூறு
+
+                </button>
+
+
+                <button class="quick-btn">
+
+                    Tell me about Indian Constitution
+
+                </button>
+
+
+                <button class="quick-btn">
+
+                    Tamil Nadu history pathi sollu
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- STUDY MATERIALS SECTION -->
+        <!-- ================================================= -->
+
+        <div class="content-section"
+             id="studySection"
+             style="display:none;">
+
+            <h2>
+                <i class="fa-solid fa-book"></i>
+                TNPSC Study Materials
+            </h2>
+
+            <p>
+                TNPSC preparation-ku useful-aana important topics:
+            </p>
+
+
+            <div class="material-grid">
+
+
+                <div class="material-card">
+
+                    <i class="fa-solid fa-landmark"></i>
+
+                    <h3>Indian Polity</h3>
+
+                    <p>
+                        Constitution, Fundamental Rights,
+                        Duties, Parliament and President.
+                    </p>
+
+                </div>
+
+
+                <div class="material-card">
+
+                    <i class="fa-solid fa-clock"></i>
+
+                    <h3>Indian History</h3>
+
+                    <p>
+                        Ancient, Medieval and Modern Indian History.
+                    </p>
+
+                </div>
+
+
+                <div class="material-card">
+
+                    <i class="fa-solid fa-building-columns"></i>
+
+                    <h3>Tamil Nadu History</h3>
+
+                    <p>
+                        Chera, Chola, Pandya and Tamil Nadu history topics.
+                    </p>
+
+                </div>
+
+
+                <div class="material-card">
+
+                    <i class="fa-solid fa-earth-americas"></i>
+
+                    <h3>Geography</h3>
+
+                    <p>
+                        Indian Geography, Tamil Nadu Geography,
+                        Rivers, Climate and Resources.
+                    </p>
+
+                </div>
+
+
+                <div class="material-card">
+
+                    <i class="fa-solid fa-brain"></i>
+
+                    <h3>General Knowledge</h3>
+
+                    <p>
+                        Important GK questions and current
+                        general awareness topics.
+                    </p>
+
+                </div>
+
+
+                <div class="material-card">
+
+                    <i class="fa-solid fa-calculator"></i>
+
+                    <h3>Aptitude</h3>
+
+                    <p>
+                        Percentage, Ratio, Average,
+                        Profit and Loss and basic mathematics.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- PRACTICE QUESTIONS SECTION -->
+        <!-- ================================================= -->
+
+        <div class="content-section"
+             id="practiceSection"
+             style="display:none;">
+
+            <h2>
+
+                <i class="fa-solid fa-circle-question"></i>
+
+                Practice Questions
+
+            </h2>
+
+            <p>
+                TNPSC exam preparation-ku practice questions:
+            </p>
+
+
+            <div class="practice-list">
+
+
+                <div class="practice-card">
+
+                    <span>1</span>
+
+                    <div>
+
+                        <h3>Indian Polity</h3>
+
+                        <p>
+                            What is Article 21 of the Indian Constitution?
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="practice-card">
+
+                    <span>2</span>
+
+                    <div>
+
+                        <h3>General Knowledge</h3>
+
+                        <p>
+                            What is the national animal of India?
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="practice-card">
+
+                    <span>3</span>
+
+                    <div>
+
+                        <h3>Geography</h3>
+
+                        <p>
+                            Which is the longest river in India?
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="practice-card">
+
+                    <span>4</span>
+
+                    <div>
+
+                        <h3>Aptitude</h3>
+
+                        <p>
+                            If 25% of a number is 50,
+                            what is the number?
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="practice-card">
+
+                    <span>5</span>
+
+                    <div>
+
+                        <h3>Tamil Nadu History</h3>
+
+                        <p>
+                            Name the three major ancient Tamil kingdoms.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="practice-card">
+
+                    <span>6</span>
+
+                    <div>
+
+                        <h3>Indian History</h3>
+
+                        <p>
+                            Who is known as the Father of the Nation?
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- HISTORY SECTION -->
+        <!-- ================================================= -->
+
+        <div class="content-section"
+             id="historySection"
+             style="display:none;">
+
+            <h2>
+
+                <i class="fa-solid fa-clock-rotate-left"></i>
+
+                Chat History
+
+            </h2>
+
+            <p>
+                Neenga previously ketta questions inga save aagum.
+            </p>
+
+
+            <div id="historyList">
+
+                <div class="empty-history">
+
+                    <i class="fa-solid fa-message"></i>
+
+                    <p>
+                        No chat history yet.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- INPUT SECTION -->
+        <!-- ================================================= -->
+
+        <div class="input-section"
+             id="inputSection">
+
+
+            <div class="input-box">
+
+                <input
+                    type="text"
+                    id="userInput"
+                    placeholder="Ask your TNPSC question in Tamil, English or Tanglish..."
+                >
+
+
+                <button id="sendBtn">
+
+                    <i class="fa-solid fa-paper-plane"></i>
+
+                </button>
+
+            </div>
+
+
+            <p class="input-note">
+
+                You can ask questions in
+                Tamil • English • Tanglish
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- EXISTING CHATBOT JAVASCRIPT -->
+<!-- ================================================= -->
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+
+<!-- ================================================= -->
+<!-- SIDEBAR JAVASCRIPT -->
+<!-- ================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+
+    const chatMenuBtn =
+        document.getElementById("chatMenuBtn");
+
+    const studyMenuBtn =
+        document.getElementById("studyMenuBtn");
+
+    const practiceMenuBtn =
+        document.getElementById("practiceMenuBtn");
+
+    const historyMenuBtn =
+        document.getElementById("historyMenuBtn");
+
+    const newChatBtn =
+        document.getElementById("newChatBtn");
+
+
+    const chatContainer =
+        document.getElementById("chatContainer");
+
+    const studySection =
+        document.getElementById("studySection");
+
+    const practiceSection =
+        document.getElementById("practiceSection");
+
+    const historySection =
+        document.getElementById("historySection");
+
+    const inputSection =
+        document.getElementById("inputSection");
+
+
+    /* ==========================================
+       REMOVE ACTIVE MENU
+    ========================================== */
+
+    function removeActive() {
+
+        document
+            .querySelectorAll(".menu-item")
+            .forEach(function (item) {
+
+                item.classList.remove("active");
+
+            });
+
+    }
+
+
+    /* ==========================================
+       HIDE ALL SECTIONS
+    ========================================== */
+
+    function hideAllSections() {
+
+        chatContainer.style.display = "none";
+
+        studySection.style.display = "none";
+
+        practiceSection.style.display = "none";
+
+        historySection.style.display = "none";
+
+        inputSection.style.display = "none";
+
+    }
+
+
+    /* ==========================================
+       CHAT BUTTON
+    ========================================== */
+
+    chatMenuBtn.addEventListener("click", function () {
+
+        removeActive();
+
+        chatMenuBtn.classList.add("active");
+
+        hideAllSections();
+
+        chatContainer.style.display = "block";
+
+        inputSection.style.display = "block";
+
+    });
+
+
+    /* ==========================================
+       STUDY MATERIAL BUTTON
+    ========================================== */
+
+    studyMenuBtn.addEventListener("click", function () {
+
+        removeActive();
+
+        studyMenuBtn.classList.add("active");
+
+        hideAllSections();
+
+        studySection.style.display = "block";
+
+    });
+
+
+    /* ==========================================
+       PRACTICE QUESTIONS BUTTON
+    ========================================== */
+
+    practiceMenuBtn.addEventListener("click", function () {
+
+        removeActive();
+
+        practiceMenuBtn.classList.add("active");
+
+        hideAllSections();
+
+        practiceSection.style.display = "block";
+
+    });
+
+
+    /* ==========================================
+       HISTORY BUTTON
+    ========================================== */
+
+    historyMenuBtn.addEventListener("click", function () {
+
+        removeActive();
+
+        historyMenuBtn.classList.add("active");
+
+        hideAllSections();
+
+        historySection.style.display = "block";
+
+        loadHistory();
+
+    });
+
+
+    /* ==========================================
+       NEW CHAT
+    ========================================== */
+
+    newChatBtn.addEventListener("click", function () {
+
+        removeActive();
+
+        chatMenuBtn.classList.add("active");
+
+        hideAllSections();
+
+        chatContainer.style.display = "block";
+
+        inputSection.style.display = "block";
+
+
+        chatContainer.innerHTML = `
+
+            <div class="message bot-message">
+
+                <div class="avatar bot-avatar">
+
+                    <i class="fa-solid fa-robot"></i>
+
+                </div>
+
+                <div class="message-content">
+
+                    <p>
+                        👋 New Chat Started!
+                    </p>
+
+                    <p>
+                        Neenga Tamil, English or Tanglish-la
+                        TNPSC question kekalam.
+                    </p>
+
+                    <p>
+                        Let's start studying! 📚🤖
+                    </p>
+
+                </div>
+
+            </div>
+
+        `;
+
+    });
+
+
+    /* ==========================================
+       SAVE HISTORY
+    ========================================== */
+
+    window.saveChatHistory = function(question, answer) {
+
+        let history =
+            JSON.parse(localStorage.getItem("tnpscHistory")) || [];
+
+
+        history.push({
+
+            question: question,
+
+            answer: answer,
+
+            time: new Date().toLocaleString()
+
+        });
+
+
+        localStorage.setItem(
+            "tnpscHistory",
+            JSON.stringify(history)
+        );
+
+    };
+
+
+    /* ==========================================
+       LOAD HISTORY
+    ========================================== */
+
+    function loadHistory() {
+
+        const historyList =
+            document.getElementById("historyList");
+
+
+        let history =
+            JSON.parse(localStorage.getItem("tnpscHistory")) || [];
+
+
+        if (history.length === 0) {
+
+            historyList.innerHTML = `
+
+                <div class="empty-history">
+
+                    <i class="fa-solid fa-message"></i>
+
+                    <p>
+                        No chat history yet.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        historyList.innerHTML = "";
+
+
+        history.reverse().forEach(function(item) {
+
+            const historyCard =
+                document.createElement("div");
+
+            historyCard.className =
+                "history-card";
+
+
+            historyCard.innerHTML = `
+
+                <div class="history-question">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <strong>
+                        ${item.question}
+                    </strong>
+
+                </div>
+
+                <div class="history-answer">
+
+                    <i class="fa-solid fa-robot"></i>
+
+                    <span>
+                        ${item.answer}
+                    </span>
+
+                </div>
+
+                <small>
+                    ${item.time}
+                </small>
+
+            `;
+
+
+            historyList.appendChild(historyCard);
+
+        });
+
+    }
+
+});
+
+</script>
+
+
+</body>
+
+</html>

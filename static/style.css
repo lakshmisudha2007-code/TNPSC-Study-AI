@@ -1,0 +1,564 @@
+/* ================================
+   GOOGLE FONT
+================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+
+/* ================================
+   RESET
+================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* ================================
+   BODY
+================================ */
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: #f4f6fb;
+    color: #222;
+    height: 100vh;
+    overflow: hidden;
+}
+
+
+/* ================================
+   MAIN APP CONTAINER
+================================ */
+
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+
+/* ================================
+   SIDEBAR
+================================ */
+
+.sidebar {
+    width: 260px;
+    background: #1e293b;
+    color: white;
+    padding: 25px 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* ================================
+   LOGO
+================================ */
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 35px;
+}
+
+.logo i {
+    font-size: 28px;
+}
+
+.logo h2 {
+    font-size: 22px;
+}
+
+
+/* ================================
+   NEW CHAT BUTTON
+================================ */
+
+.new-chat-btn {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    font-family: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    background: #ffffff;
+    color: #1e293b;
+    margin-bottom: 30px;
+    transition: 0.3s;
+}
+
+.new-chat-btn:hover {
+    transform: translateY(-2px);
+}
+
+
+/* ================================
+   MENU
+================================ */
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.menu-item {
+    background: transparent;
+    border: none;
+    color: #cbd5e1;
+    padding: 13px;
+    text-align: left;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-family: inherit;
+    transition: 0.3s;
+}
+
+.menu-item i {
+    margin-right: 10px;
+}
+
+.menu-item:hover {
+    background: #334155;
+    color: white;
+}
+
+.menu-item.active {
+    background: #334155;
+    color: white;
+}
+
+
+/* ================================
+   SIDEBAR FOOTER
+================================ */
+
+.sidebar-footer {
+    margin-top: auto;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+
+/* ================================
+   MAIN CONTENT
+================================ */
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+
+/* ================================
+   HEADER
+================================ */
+
+.header {
+    background: white;
+    padding: 18px 35px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.header h2 {
+    font-size: 20px;
+}
+
+.header p {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 3px;
+}
+
+
+/* ================================
+   LANGUAGE SELECT
+================================ */
+
+.language-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.language-section i {
+    font-size: 18px;
+}
+
+.language-section select {
+    border: 1px solid #d1d5db;
+    padding: 8px 12px;
+    border-radius: 8px;
+    outline: none;
+    font-family: inherit;
+    cursor: pointer;
+    background: white;
+}
+
+
+/* ================================
+   CHAT CONTAINER
+================================ */
+
+.chat-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 35px 10%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+/* ================================
+   MESSAGE
+================================ */
+
+.message {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    max-width: 80%;
+}
+
+
+/* ================================
+   USER MESSAGE
+================================ */
+
+.user-message {
+    margin-left: auto;
+    flex-direction: row-reverse;
+}
+
+
+/* ================================
+   AVATAR
+================================ */
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* BOT AVATAR */
+
+.bot-avatar {
+    background: #1e293b;
+    color: white;
+}
+
+
+/* USER AVATAR */
+
+.user-avatar {
+    background: #64748b;
+    color: white;
+}
+
+
+/* ================================
+   MESSAGE CONTENT
+================================ */
+
+.message-content {
+    padding: 14px 18px;
+    border-radius: 15px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* BOT MESSAGE */
+
+.bot-message .message-content {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-top-left-radius: 4px;
+}
+
+
+/* USER MESSAGE */
+
+.user-message .message-content {
+    background: #1e293b;
+    color: white;
+    border-top-right-radius: 4px;
+}
+
+
+/* ================================
+   QUICK QUESTIONS
+================================ */
+
+.quick-questions {
+    margin-left: 50px;
+    margin-top: 5px;
+}
+
+.quick-questions p {
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.quick-btn {
+    border: 1px solid #d1d5db;
+    background: white;
+    padding: 10px 14px;
+    border-radius: 20px;
+    margin: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    transition: 0.3s;
+}
+
+.quick-btn:hover {
+    background: #1e293b;
+    color: white;
+}
+
+
+/* ================================
+   INPUT SECTION
+================================ */
+
+.input-section {
+    background: white;
+    padding: 20px 10% 15px;
+    border-top: 1px solid #e5e7eb;
+}
+
+
+/* ================================
+   INPUT BOX
+================================ */
+
+.input-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    padding: 5px;
+    background: white;
+    transition: 0.3s;
+}
+
+.input-box:focus-within {
+    border-color: #1e293b;
+}
+
+
+/* ================================
+   INPUT
+================================ */
+
+.input-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 12px;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+
+/* ================================
+   SEND BUTTON
+================================ */
+
+#sendBtn {
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 9px;
+    background: #1e293b;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+#sendBtn:hover {
+    transform: scale(1.05);
+}
+
+
+/* ================================
+   INPUT NOTE
+================================ */
+
+.input-note {
+    text-align: center;
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 8px;
+}
+
+
+/* ================================
+   TYPING ANIMATION
+================================ */
+
+.typing {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 70px;
+}
+
+.typing span {
+    width: 7px;
+    height: 7px;
+    background: #64748b;
+    border-radius: 50%;
+    animation: typingAnimation 1.2s infinite;
+}
+
+.typing span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typingAnimation {
+
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+
+}
+
+
+/* ================================
+   SCROLLBAR
+================================ */
+
+.chat-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+
+/* ================================
+   RESPONSIVE DESIGN
+================================ */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        width: 70px;
+        padding: 20px 10px;
+    }
+
+    .logo h2,
+    .new-chat-btn,
+    .menu-item,
+    .sidebar-footer {
+        font-size: 0;
+    }
+
+    .logo {
+        justify-content: center;
+    }
+
+    .logo i {
+        font-size: 24px;
+    }
+
+    .new-chat-btn {
+        width: 50px;
+        height: 50px;
+        padding: 0;
+        margin: 0 auto 25px;
+    }
+
+    .new-chat-btn i {
+        font-size: 16px;
+    }
+
+    .menu-item {
+        text-align: center;
+        padding: 15px 5px;
+    }
+
+    .menu-item i {
+        margin: 0;
+        font-size: 17px;
+    }
+
+    .header {
+        padding: 15px;
+    }
+
+    .header h2 {
+        font-size: 16px;
+    }
+
+    .header p {
+        font-size: 11px;
+    }
+
+    .language-section select {
+        width: 100px;
+        font-size: 11px;
+    }
+
+    .chat-container {
+        padding: 25px 15px;
+    }
+
+    .message {
+        max-width: 90%;
+    }
+
+    .quick-questions {
+        margin-left: 0;
+    }
+
+    .input-section {
+        padding: 15px;
+    }
+
+}
