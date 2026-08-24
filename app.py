@@ -1,10 +1,14 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-import re
+
 import os
 import json
+import re
+
 import firebase_admin
 from firebase_admin import credentials, firestore
+
+import google.generativeai as genai
 
 
 # ==========================================
@@ -12,9 +16,23 @@ from firebase_admin import credentials, firestore
 # ==========================================
 
 app = Flask(__name__)
-
-# Allow frontend to connect with backend
 CORS(app)
+
+
+# ==========================================
+# GEMINI AI CONFIGURATION
+# ==========================================
+
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+
+if GEMINI_API_KEY:
+    try:
+        genai.configure(api_key=GEMINI_API_KEY)
+        print("Gemini API configured successfully.")
+    except Exception as error:
+        print("Gemini configuration error:", error)
+else:
+    print("WARNING: GEMINI_API_KEY not found.")
 
 
 # ==========================================
@@ -24,10 +42,12 @@ CORS(app)
 db = None
 
 try:
+
     # Render Environment Variable
     firebase_credentials = os.environ.get("FIREBASE_CREDENTIALS")
 
     if firebase_credentials:
+
         firebase_config = json.loads(firebase_credentials)
 
         cred = credentials.Certificate(firebase_config)
@@ -38,8 +58,9 @@ try:
 
         print("Firebase connected successfully.")
 
-    # Local computer: database.json
+    # Local computer
     elif os.path.exists("database.json"):
+
         cred = credentials.Certificate("database.json")
 
         firebase_admin.initialize_app(cred)
@@ -49,10 +70,14 @@ try:
         print("Firebase connected using database.json.")
 
     else:
-        print("Firebase credentials not found. Running without Firebase.")
+
+        print("Firebase credentials not found.")
+        print("Running without Firebase.")
 
 except Exception as error:
+
     print("Firebase connection error:", error)
+
     db = None
 
 
@@ -62,18 +87,22 @@ except Exception as error:
 
 def detect_language(message):
 
-    # Tamil Unicode characters
+    # Tamil Unicode
     tamil_pattern = re.compile(r'[\u0B80-\u0BFF]')
 
     if tamil_pattern.search(message):
         return "tamil"
 
-    # Common Tanglish words
+
+    # Tanglish words
     tanglish_words = [
+
         "ena",
         "enna",
         "sollu",
+        "sollunga",
         "kudu",
+        "kudunga",
         "venum",
         "epdi",
         "eppadi",
@@ -83,8 +112,10 @@ def detect_language(message):
         "irukku",
         "illa",
         "pannu",
+        "pannunga",
         "padikanum",
         "padikka",
+        "padipu",
         "oda",
         "ku",
         "la",
@@ -94,288 +125,153 @@ def detect_language(message):
         "enaku",
         "ungaluku",
         "kekura",
-        "kekuren"
+        "kekuren",
+        "sollu",
+        "exam",
+        "question",
+        "answer",
+        "history",
+        "math",
+        "gk"
     ]
 
     message_lower = message.lower()
 
+    words = message_lower.split()
+
     for word in tanglish_words:
 
-        if word in message_lower.split():
+        if word in words:
             return "tanglish"
 
-    # Default
     return "english"
 
 
 # ==========================================
-# TNPSC QUESTION ANSWERS
+# GEMINI ANSWER FUNCTION
 # ==========================================
 
 def get_answer(message, language):
 
-    message_lower = message.lower()
+    if not GEMINI_API_KEY:
+
+        return (
+            "Gemini API key is not configured. "
+            "Please add GEMINI_API_KEY in Render Environment Variables."
+        )
 
 
     # ======================================
-    # CAPITAL OF INDIA
-    # ======================================
-
-    if (
-        "capital of india" in message_lower
-        or "india capital" in message_lower
-        or "இந்தியாவின் தலைநகரம்" in message
-    ):
-
-        if language == "tamil":
-
-            return "இந்தியாவின் தலைநகரம் புதுடெல்லி."
-
-        elif language == "tanglish":
-
-            return "India oda capital New Delhi."
-
-        else:
-
-            return "The capital of India is New Delhi."
-
-
-    # ======================================
-    # ARTICLE 21
-    # ======================================
-
-    if "article 21" in message_lower:
-
-        if language == "tamil":
-
-            return (
-                "இந்திய அரசியலமைப்பின் Article 21 "
-                "வாழ்வதற்கும் தனிப்பட்ட சுதந்திரத்திற்கும் "
-                "உரிமை வழங்குகிறது."
-            )
-
-        elif language == "tanglish":
-
-            return (
-                "Article 21 na Right to Life and Personal Liberty. "
-                "Simple ah sonna, ovvoru person kum life and "
-                "personal freedom oda right iruku."
-            )
-
-        else:
-
-            return (
-                "Article 21 of the Indian Constitution guarantees "
-                "the Right to Life and Personal Liberty."
-            )
-
-
-    # ======================================
-    # TNPSC GROUP 4
-    # ======================================
-
-    if "group 4" in message_lower:
-
-        if language == "tamil":
-
-            return (
-                "TNPSC Group 4 தேர்வுக்கு தமிழ், பொது அறிவு, "
-                "அரசியலமைப்பு, வரலாறு, புவியியல் மற்றும் "
-                "அடிப்படை கணிதம் போன்ற பாடங்களை படிக்க வேண்டும்."
-            )
-
-        elif language == "tanglish":
-
-            return (
-                "TNPSC Group 4 prepare panna Tamil, General Knowledge, "
-                "History, Geography, Polity and Aptitude topics "
-                "padikanum. Namma practice questions um pannalam!"
-            )
-
-        else:
-
-            return (
-                "For TNPSC Group 4 preparation, you should study "
-                "Tamil, General Knowledge, History, Geography, "
-                "Polity and Aptitude."
-            )
-
-
-    # ======================================
-    # INDIAN CONSTITUTION
-    # ======================================
-
-    if (
-        "constitution" in message_lower
-        or "அரசியலமைப்பு" in message
-        or "constitution pathi" in message_lower
-    ):
-
-        if language == "tamil":
-
-            return (
-                "இந்திய அரசியலமைப்பு இந்தியாவின் அடிப்படை சட்டமாகும். "
-                "இது குடிமக்களின் உரிமைகள் மற்றும் அரசாங்கத்தின் "
-                "அமைப்பை விளக்குகிறது."
-            )
-
-        elif language == "tanglish":
-
-            return (
-                "Indian Constitution na India oda basic law. "
-                "Ithu citizens oda rights, duties matrum government "
-                "epdi work pannanum nu explain pannuthu."
-            )
-
-        else:
-
-            return (
-                "The Indian Constitution is the supreme law of India. "
-                "It explains the structure of government and the "
-                "rights and duties of citizens."
-            )
-
-
-    # ======================================
-    # TAMIL NADU HISTORY
-    # ======================================
-
-    if (
-        "tamil nadu history" in message_lower
-        or "தமிழ்நாடு வரலாறு" in message
-        or "history pathi" in message_lower
-    ):
-
-        if language == "tamil":
-
-            return (
-                "தமிழ்நாட்டின் வரலாறு சேர, சோழ மற்றும் பாண்டிய "
-                "அரசர்களுடன் தொடர்புடையது. குறிப்பாக சோழர்கள் "
-                "சிறந்த நிர்வாகம் மற்றும் கோவில் கட்டிடக்கலைக்கு "
-                "புகழ்பெற்றவர்கள்."
-            )
-
-        elif language == "tanglish":
-
-            return (
-                "Tamil Nadu history la Chera, Chola and Pandya "
-                "kingdoms romba important. Chola kings avanga "
-                "administration and temple architecture ku famous."
-            )
-
-        else:
-
-            return (
-                "Tamil Nadu has a rich history associated with the "
-                "Chera, Chola and Pandya kingdoms. The Cholas are "
-                "especially known for administration and temple "
-                "architecture."
-            )
-
-
-    # ======================================
-    # APTITUDE QUESTION
-    # ======================================
-
-    if (
-        "aptitude" in message_lower
-        or "math question" in message_lower
-        or "கணிதம்" in message
-    ):
-
-        if language == "tamil":
-
-            return (
-                "பயிற்சி கேள்வி:\n\n"
-                "ஒரு எண்ணின் 25% = 50 என்றால், அந்த எண் என்ன?\n\n"
-                "பதில்: 200.\n\n"
-                "விளக்கம்: 50 × 100 / 25 = 200."
-            )
-
-        elif language == "tanglish":
-
-            return (
-                "Practice Question 👇\n\n"
-                "Oru number oda 25% = 50 na, "
-                "antha number enna?\n\n"
-                "Answer: 200.\n\n"
-                "Explanation: 50 × 100 / 25 = 200."
-            )
-
-        else:
-
-            return (
-                "Practice Question 👇\n\n"
-                "If 25% of a number is 50, what is the number?\n\n"
-                "Answer: 200.\n\n"
-                "Explanation: 50 × 100 / 25 = 200."
-            )
-
-
-    # ======================================
-    # GENERAL KNOWLEDGE
-    # ======================================
-
-    if (
-        "general knowledge" in message_lower
-        or "gk" in message_lower
-        or "பொது அறிவு" in message
-    ):
-
-        if language == "tamil":
-
-            return (
-                "பொது அறிவு பயிற்சி கேள்வி:\n\n"
-                "இந்தியாவின் தேசிய விலங்கு எது?\n\n"
-                "பதில்: புலி."
-            )
-
-        elif language == "tanglish":
-
-            return (
-                "GK Practice Question 👇\n\n"
-                "India oda National Animal enna?\n\n"
-                "Answer: Puli (Tiger)."
-            )
-
-        else:
-
-            return (
-                "GK Practice Question 👇\n\n"
-                "What is the national animal of India?\n\n"
-                "Answer: Tiger."
-            )
-
-
-    # ======================================
-    # DEFAULT RESPONSE
+    # LANGUAGE INSTRUCTION
     # ======================================
 
     if language == "tamil":
 
-        return (
-            "உங்கள் கேள்வியை புரிந்துகொண்டேன். "
-            "TNPSC தொடர்பான கேள்விகளை கேட்கலாம். "
-            "வரலாறு, அரசியலமைப்பு, புவியியல், "
-            "பொது அறிவு மற்றும் கணிதம் போன்றவற்றில் "
-            "நான் உதவ முடியும்."
-        )
+        language_instruction = """
+Answer completely in Tamil script.
+Use simple Tamil that a TNPSC student can easily understand.
+Avoid unnecessary English words.
+"""
 
     elif language == "tanglish":
 
-        return (
-            "Ungaloda question purinjuthu 👍🏻 "
-            "TNPSC related questions kekalam. "
-            "History, Polity, Geography, GK and Aptitude "
-            "topics la naan help panren!"
-        )
+        language_instruction = """
+Answer completely in Tanglish.
+Use Tamil words written using English letters.
+Do NOT use Tamil Unicode script.
+Keep the explanation simple and natural.
+"""
 
     else:
 
+        language_instruction = """
+Answer completely in English.
+Use simple English suitable for a TNPSC student.
+"""
+
+
+    # ======================================
+    # TNPSC SYSTEM PROMPT
+    # ======================================
+
+    prompt = f"""
+You are TNPSC Study AI, an educational assistant
+designed specifically for TNPSC examination preparation.
+
+The student can ask questions about:
+
+- TNPSC
+- Group 1
+- Group 2
+- Group 2A
+- Group 4
+- History
+- Indian History
+- Tamil Nadu History
+- Indian Polity
+- Indian Constitution
+- Geography
+- Economics
+- General Science
+- General Knowledge
+- Current Affairs
+- Aptitude
+- Mathematics
+- Tamil
+- English
+- Government schemes
+- Important personalities
+- Important dates
+- Previous year style questions
+- Practice questions
+
+{language_instruction}
+
+IMPORTANT RULES:
+
+1. Answer the student's actual question directly.
+2. Do not give a generic response.
+3. Explain concepts in a student-friendly way.
+4. For factual questions, give the correct answer first.
+5. For aptitude or mathematics questions, show the calculation step by step.
+6. If the student asks for a practice question, give one TNPSC-level question and answer.
+7. If the student asks for multiple questions, provide multiple questions.
+8. If appropriate, use headings and bullet points.
+9. Keep answers reasonably concise unless the student asks for a detailed answer.
+10. Do not say that you are unable to answer just because the question is not one of a fixed list.
+11. If the question is related to TNPSC preparation, answer it as a TNPSC study assistant.
+12. If the student asks in Tanglish, respond in Tanglish.
+13. If the student asks in Tamil script, respond in Tamil script.
+14. If the student asks in English, respond in English.
+
+Student question:
+
+{message}
+"""
+
+
+    try:
+
+        # Gemini Flash model
+        model = genai.GenerativeModel(
+            "gemini-2.5-flash"
+        )
+
+        response = model.generate_content(prompt)
+
+        if response and response.text:
+
+            return response.text.strip()
+
+        return "Sorry, I could not generate an answer. Please try again."
+
+    except Exception as error:
+
+        print("Gemini Error:", error)
+
         return (
-            "I understand your question. You can ask me "
-            "TNPSC-related questions about History, Polity, "
-            "Geography, General Knowledge and Aptitude."
+            "Sorry, Gemini AI response failed. "
+            "Please check the Gemini API key and try again."
         )
 
 
@@ -391,12 +287,18 @@ def chat():
         data = request.get_json()
 
         if not data:
+
             return jsonify({
                 "success": False,
                 "reply": "Invalid request."
             })
 
-        message = data.get("message", "").strip()
+
+        message = data.get(
+            "message",
+            ""
+        ).strip()
+
 
         selected_language = data.get(
             "language",
@@ -405,7 +307,7 @@ def chat():
 
 
         # ==================================
-        # EMPTY MESSAGE CHECK
+        # EMPTY MESSAGE
         # ==================================
 
         if not message:
@@ -417,7 +319,7 @@ def chat():
 
 
         # ==================================
-        # LANGUAGE DETECTION
+        # LANGUAGE
         # ==================================
 
         if selected_language == "auto":
@@ -430,7 +332,7 @@ def chat():
 
 
         # ==================================
-        # GET ANSWER
+        # GEMINI ANSWER
         # ==================================
 
         answer = get_answer(
@@ -440,14 +342,16 @@ def chat():
 
 
         # ==================================
-        # SAVE CHAT TO FIREBASE
+        # SAVE TO FIREBASE
         # ==================================
 
         if db is not None:
 
             try:
 
-                db.collection("chat_history").add({
+                db.collection(
+                    "chat_history"
+                ).add({
 
                     "question": message,
 
@@ -456,6 +360,8 @@ def chat():
                     "language": language
 
                 })
+
+                print("Chat saved to Firebase.")
 
             except Exception as firebase_error:
 
@@ -482,7 +388,10 @@ def chat():
 
     except Exception as error:
 
-        print("Error:", error)
+        print(
+            "Chat API Error:",
+            error
+        )
 
         return jsonify({
 
@@ -500,7 +409,9 @@ def chat():
 @app.route("/")
 def home():
 
-    return render_template("index.html")
+    return render_template(
+        "index.html"
+    )
 
 
 # ==========================================
@@ -514,7 +425,9 @@ def health():
 
         "status": "ok",
 
-        "firebase": db is not None
+        "firebase": db is not None,
+
+        "gemini": GEMINI_API_KEY is not None
 
     })
 
