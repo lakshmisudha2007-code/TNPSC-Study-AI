@@ -1,4 +1,4 @@
 Flask
-google.genai
-python.dotenv
-firebase.admin
+flask-cors
+firebase-admin
+gunicorn
