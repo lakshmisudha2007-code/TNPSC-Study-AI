@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import re
-
+import os
+import json
 import firebase_admin
 from firebase_admin import credentials, firestore
 
@@ -20,11 +21,39 @@ CORS(app)
 # FIREBASE CONNECTION
 # ==========================================
 
-cred = credentials.Certificate("database.json")
+db = None
 
-firebase_admin.initialize_app(cred)
+try:
+    # Render Environment Variable
+    firebase_credentials = os.environ.get("FIREBASE_CREDENTIALS")
 
-db = firestore.client()
+    if firebase_credentials:
+        firebase_config = json.loads(firebase_credentials)
+
+        cred = credentials.Certificate(firebase_config)
+
+        firebase_admin.initialize_app(cred)
+
+        db = firestore.client()
+
+        print("Firebase connected successfully.")
+
+    # Local computer: database.json
+    elif os.path.exists("database.json"):
+        cred = credentials.Certificate("database.json")
+
+        firebase_admin.initialize_app(cred)
+
+        db = firestore.client()
+
+        print("Firebase connected using database.json.")
+
+    else:
+        print("Firebase credentials not found. Running without Firebase.")
+
+except Exception as error:
+    print("Firebase connection error:", error)
+    db = None
 
 
 # ==========================================
@@ -38,7 +67,6 @@ def detect_language(message):
 
     if tamil_pattern.search(message):
         return "tamil"
-
 
     # Common Tanglish words
     tanglish_words = [
@@ -69,16 +97,12 @@ def detect_language(message):
         "kekuren"
     ]
 
-
     message_lower = message.lower()
-
 
     for word in tanglish_words:
 
         if word in message_lower.split():
-
             return "tanglish"
-
 
     # Default
     return "english"
@@ -107,11 +131,9 @@ def get_answer(message, language):
 
             return "இந்தியாவின் தலைநகரம் புதுடெல்லி."
 
-
         elif language == "tanglish":
 
             return "India oda capital New Delhi."
-
 
         else:
 
@@ -132,7 +154,6 @@ def get_answer(message, language):
                 "உரிமை வழங்குகிறது."
             )
 
-
         elif language == "tanglish":
 
             return (
@@ -140,7 +161,6 @@ def get_answer(message, language):
                 "Simple ah sonna, ovvoru person kum life and "
                 "personal freedom oda right iruku."
             )
-
 
         else:
 
@@ -164,7 +184,6 @@ def get_answer(message, language):
                 "அடிப்படை கணிதம் போன்ற பாடங்களை படிக்க வேண்டும்."
             )
 
-
         elif language == "tanglish":
 
             return (
@@ -172,7 +191,6 @@ def get_answer(message, language):
                 "History, Geography, Polity and Aptitude topics "
                 "padikanum. Namma practice questions um pannalam!"
             )
-
 
         else:
 
@@ -201,7 +219,6 @@ def get_answer(message, language):
                 "அமைப்பை விளக்குகிறது."
             )
 
-
         elif language == "tanglish":
 
             return (
@@ -209,7 +226,6 @@ def get_answer(message, language):
                 "Ithu citizens oda rights, duties matrum government "
                 "epdi work pannanum nu explain pannuthu."
             )
-
 
         else:
 
@@ -239,7 +255,6 @@ def get_answer(message, language):
                 "புகழ்பெற்றவர்கள்."
             )
 
-
         elif language == "tanglish":
 
             return (
@@ -247,7 +262,6 @@ def get_answer(message, language):
                 "kingdoms romba important. Chola kings avanga "
                 "administration and temple architecture ku famous."
             )
-
 
         else:
 
@@ -278,7 +292,6 @@ def get_answer(message, language):
                 "விளக்கம்: 50 × 100 / 25 = 200."
             )
 
-
         elif language == "tanglish":
 
             return (
@@ -288,7 +301,6 @@ def get_answer(message, language):
                 "Answer: 200.\n\n"
                 "Explanation: 50 × 100 / 25 = 200."
             )
-
 
         else:
 
@@ -318,7 +330,6 @@ def get_answer(message, language):
                 "பதில்: புலி."
             )
 
-
         elif language == "tanglish":
 
             return (
@@ -326,7 +337,6 @@ def get_answer(message, language):
                 "India oda National Animal enna?\n\n"
                 "Answer: Puli (Tiger)."
             )
-
 
         else:
 
@@ -351,7 +361,6 @@ def get_answer(message, language):
             "நான் உதவ முடியும்."
         )
 
-
     elif language == "tanglish":
 
         return (
@@ -360,7 +369,6 @@ def get_answer(message, language):
             "History, Polity, Geography, GK and Aptitude "
             "topics la naan help panren!"
         )
-
 
     else:
 
@@ -382,6 +390,12 @@ def chat():
 
         data = request.get_json()
 
+        if not data:
+            return jsonify({
+                "success": False,
+                "reply": "Invalid request."
+            })
+
         message = data.get("message", "").strip()
 
         selected_language = data.get(
@@ -397,11 +411,8 @@ def chat():
         if not message:
 
             return jsonify({
-
                 "success": False,
-
                 "reply": "Please enter a question."
-
             })
 
 
@@ -432,12 +443,26 @@ def chat():
         # SAVE CHAT TO FIREBASE
         # ==================================
 
-# db.collection("chat_history").add({
-#     "question": message,
-#     "answer": answer,
-#     "language": language
-# })
-        
+        if db is not None:
+
+            try:
+
+                db.collection("chat_history").add({
+
+                    "question": message,
+
+                    "answer": answer,
+
+                    "language": language
+
+                })
+
+            except Exception as firebase_error:
+
+                print(
+                    "Firebase save error:",
+                    firebase_error
+                )
 
 
         # ==================================
@@ -474,7 +499,25 @@ def chat():
 
 @app.route("/")
 def home():
+
     return render_template("index.html")
+
+
+# ==========================================
+# HEALTH CHECK
+# ==========================================
+
+@app.route("/health")
+def health():
+
+    return jsonify({
+
+        "status": "ok",
+
+        "firebase": db is not None
+
+    })
+
 
 # ==========================================
 # RUN SERVER
@@ -482,10 +525,19 @@ def home():
 
 if __name__ == "__main__":
 
+    port = int(
+        os.environ.get(
+            "PORT",
+            5000
+        )
+    )
+
     app.run(
 
-        debug=True,
+        host="0.0.0.0",
 
-        port=5000
+        port=port,
+
+        debug=False
 
     )
